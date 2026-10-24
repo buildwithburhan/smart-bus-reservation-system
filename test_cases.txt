@@ -1,0 +1,160 @@
+SMART BUS TICKET BOOKING & RESERVATION SYSTEM - TEST CASES
+===========================================================
+
+Program tested : main.py
+Environment    : Python 3 (Google Colab)
+Test date      : 25 October 2026
+Method         : All tests were run in ONE fresh run of the program, in this order:
+                 TC-09, TC-01, TC-02, TC-03, TC-12, TC-04, TC-05, TC-06,
+                 TC-10, TC-07, TC-08, TC-11, EXTRA-01
+                 (Later tests use the data created by earlier tests.)
+
+Result summary : 12 of 12 required tests passed. 1 extra test passed.
+
+
+-----------------------------------------------------------
+TC-01 | View all routes
+-----------------------------------------------------------
+Input / Action : Menu 1 -> filter "no"
+Expected       : All five routes and seat status appear.
+Actual         : R101, R102, R103, R104 and R105 were listed with journey,
+                 time, fare and seats (40/40, 36/36, 32/32, 45/45, 30/30).
+Matched        : Yes
+Screenshot     : 01_routes.png
+
+
+-----------------------------------------------------------
+TC-02 | Search Hyderabad
+-----------------------------------------------------------
+Input / Action : Menu 2 -> "hyderabad"
+Expected       : Routes departing from or arriving at Hyderabad appear.
+Actual         : R101 (Karachi -> Hyderabad), R103 (Hyderabad -> Mirpur Khas)
+                 and R105 (Sukkur -> Hyderabad) were shown.
+Matched        : Yes
+Screenshot     : 05_search.png
+
+
+-----------------------------------------------------------
+TC-03 | Unknown city
+-----------------------------------------------------------
+Input / Action : Menu 2 -> "Atlantis"
+Expected       : No-match message; program continues.
+Actual         : "No matching routes found." was shown and the menu returned.
+Matched        : Yes
+Screenshot     : 05_search.png
+
+
+-----------------------------------------------------------
+TC-04 | Book two seats
+-----------------------------------------------------------
+Input / Action : Menu 3 -> Name: Ahmed, Age: 24, Route: R101, Seats: 2
+Expected       : Booking confirmed for Rs. 2,400; R101 availability drops by 2.
+Actual         : Booking B1001 confirmed, total fare Rs. 2400, status Confirmed.
+                 Menu 1 then showed R101 as 38/40.
+Matched        : Yes
+Screenshot     : 02_booking.png
+
+
+-----------------------------------------------------------
+TC-05 | Zero seats
+-----------------------------------------------------------
+Input / Action : Menu 3 -> Name: Sara, Age: 30, Route: R101, Seats: 0
+Expected       : Reject; no booking or seat change.
+Actual         : "Booking failed: Seats must be greater than zero."
+                 No booking was created and R101 stayed at 38 seats.
+Matched        : Yes
+Screenshot     : 06_invalid_booking.png
+
+
+-----------------------------------------------------------
+TC-06 | Too many seats
+-----------------------------------------------------------
+Input / Action : Menu 3 -> Name: Sara, Age: 30, Route: R101, Seats: 39
+                 (only 38 seats were available)
+Expected       : Reject; availability never becomes negative.
+Actual         : "Booking failed: Only 38 seats available on R101."
+                 No booking was created and R101 stayed at 38 seats.
+Matched        : Yes
+Screenshot     : 06_invalid_booking.png
+
+
+-----------------------------------------------------------
+TC-07 | Cancel confirmed booking
+-----------------------------------------------------------
+Input / Action : Menu 5 -> "B1001"
+Expected       : Status changes and correct seats are restored.
+Actual         : "Booking B1001 has been cancelled.", "Seats restored: 2",
+                 "Route R101 available seats: 40". Status changed to Cancelled.
+Matched        : Yes
+Screenshot     : 03_cancel.png
+
+
+-----------------------------------------------------------
+TC-08 | Cancel same booking again
+-----------------------------------------------------------
+Input / Action : Menu 5 -> "B1001" (second time)
+Expected       : Reject; no additional seat restoration.
+Actual         : "Booking B1001 is already cancelled."
+                 Menu 1 then showed R101 as 40/40 (not 42).
+Matched        : Yes
+Screenshot     : 08_cancel_again.png
+
+
+-----------------------------------------------------------
+TC-09 | Report with no bookings
+-----------------------------------------------------------
+Input / Action : Menu 7 at the very start (no bookings yet)
+Expected       : Booking totals/revenue zero; route status still counted.
+Actual         : Total 0, Confirmed 0, Cancelled 0, Seats reserved 0,
+                 Revenue Rs. 0, Fully booked routes 0. Every route listed
+                 with Seats 0 and Revenue Rs. 0.
+Matched        : Yes
+
+
+-----------------------------------------------------------
+TC-10 | Book all seats
+-----------------------------------------------------------
+Input / Action : Menu 3 -> Name: Zain, Age: 40, Route: R105, Seats: 30
+                 (exactly all remaining seats), then Menu 6 -> "no"
+Expected       : Booking succeeds; availability zero; Fully Booked status.
+Actual         : Booking B1002 confirmed, total fare Rs. 45000.
+                 Seat availability showed R105 as 0 / 30 - Fully Booked.
+Matched        : Yes
+Screenshot     : 07_fully_booked.png
+
+
+-----------------------------------------------------------
+TC-11 | Report after cancellation
+-----------------------------------------------------------
+Input / Action : Menu 7 (after B1001 was cancelled)
+Expected       : Cancelled count increases; cancelled fare excluded.
+Actual         : Total bookings 2, Confirmed 1, Cancelled 1,
+                 Seats reserved 30, Confirmed revenue Rs. 45,000,
+                 Fully booked routes 1.
+                 Ahmed's cancelled fare (Rs. 2400) was not counted.
+Matched        : Yes
+Screenshot     : 04_report.png
+
+
+-----------------------------------------------------------
+TC-12 | Invalid menu option
+-----------------------------------------------------------
+Input / Action : Menu input "abc", then "15"
+Expected       : Helpful error; program returns to menu.
+Actual         : "abc" -> "Invalid input! Please enter a number from 1 to 9."
+                 "15"  -> "Invalid choice! Please choose a number from 1 to 9."
+                 The menu returned both times without crashing.
+Matched        : Yes
+Screenshot     : 10_invalid_menu.png
+
+
+-----------------------------------------------------------
+EXTRA-01 | Route schedule (not in PRD test list)
+-----------------------------------------------------------
+Input / Action : Menu 8
+Expected       : Routes grouped by departure city; cities with no
+                 departures show "No scheduled departures."
+Actual         : Karachi (R101, R102, R104), Hyderabad (R103), Sukkur (R105).
+                 Mirpur Khas and Lahore showed "No scheduled departures."
+Matched        : Yes
+Screenshot     : 09_schedule.png
